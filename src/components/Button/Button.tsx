@@ -8,6 +8,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     children?: ReactNode
     className?: string
     onClick?: () => void
+    disabled?: boolean
 }
 
 const Button: FC<ButtonProps> = ({
@@ -15,12 +16,14 @@ const Button: FC<ButtonProps> = ({
     size = 'md',
     children,
     className = '',
+    disabled = false,
     onClick,
     ...props
 }) => {
     return (
         <button
             onClick={onClick}
+            disabled={disabled}
             className={classNames(
                 styles.button,
                 {
