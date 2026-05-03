@@ -1,0 +1,37 @@
+.button__primary {
+    background-color: var(--bg-primary);
+    color: var(--text-secondary);
+}
+
+.button__primary:hover {
+    background-color: var(--hover-primary);
+}
+
+.button__secondary {
+    background-color: var(--text-secondary);
+    color: var(--bg-primary);
+}
+
+.button__secondary:hover {
+    background-color: var(--hover-secondary);
+}
+
+.button__s {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.button__m {
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.button__l {
+    padding: 14px 28px;
+    font-size: 18px;
+}
+
+.button__xl {
+    padding: 18px 36px;
+    font-size: 20px;
+}
