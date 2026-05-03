@@ -4,7 +4,7 @@ import { classNames } from '../../helpers/helpers'
 
 interface ButtonProps {
     appearance?: 'primary' | 'secondary'
-    size?: 's' | 'm' | 'l' | 'xl'
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
     children?: ReactNode
     className: string
 }

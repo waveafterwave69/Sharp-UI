@@ -19,14 +19,6 @@ export const Primary: Story = {
 }
 
 export const Secondary: Story = {
-    name: 'Второстепенная кнопка',
-    parameters: {
-        docs: {
-            description: {
-                story: 'Кнопка голубая',
-            },
-        },
-    },
     args: {
         appearance: 'secondary',
         children: 'Кнопка',
@@ -36,7 +28,7 @@ export const Secondary: Story = {
 export const Small: Story = {
     args: {
         appearance: 'primary',
-        size: 's',
+        size: 'sm',
         children: 'Кнопка',
     },
 }
@@ -44,7 +36,7 @@ export const Small: Story = {
 export const Large: Story = {
     args: {
         appearance: 'primary',
-        size: 'l',
+        size: 'lg',
         children: 'Кнопка',
     },
 }
