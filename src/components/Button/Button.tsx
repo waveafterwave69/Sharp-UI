@@ -1,23 +1,29 @@
-import type { FC, ReactNode } from 'react'
+import type { FC, ReactNode, ButtonHTMLAttributes } from 'react'
 import styles from './Button.module.css'
 import { classNames } from '../../helpers/helpers'
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     appearance?: 'primary' | 'secondary'
-    size?: 's' | 'm' | 'l' | 'xl'
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
     children?: ReactNode
-    className: string
+    className?: string
+    onClick?: () => void
+    disabled?: boolean
 }
 
 const Button: FC<ButtonProps> = ({
     appearance = 'primary',
-    size = 'm',
+    size = 'md',
     children,
     className = '',
+    disabled = false,
+    onClick,
     ...props
 }) => {
     return (
         <button
+            onClick={onClick}
+            disabled={disabled}
             className={classNames(
                 styles.button,
                 {
