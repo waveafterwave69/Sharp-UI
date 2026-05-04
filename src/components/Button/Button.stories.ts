@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import Button from './Button'
 
+import testImg from '../../shared/notification-bell.png'
+
 const meta: Meta<typeof Button> = {
     title: 'Компоненты/Button',
     component: Button,
@@ -23,6 +25,15 @@ export const Secondary: Story = {
     args: {
         appearance: 'secondary',
         children: 'Кнопка',
+    },
+}
+
+export const ButtonWithImg: Story = {
+    args: {
+        appearance: 'primary',
+        children: 'Кнопка',
+        borderRadius: 'none',
+        imgRight: testImg,
     },
 }
 
