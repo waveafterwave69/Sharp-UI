@@ -3,3 +3,7 @@
 body {
     font-family: var(--base-font);
 }
+
+button {
+    font-weight: 500;
+}
