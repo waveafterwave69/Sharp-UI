@@ -10,6 +10,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     onClick?: () => void
     disabled?: boolean
     borderRadius?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+    imgLeft?: string
+    imgRight?: string
 }
 
 const Button: FC<ButtonProps> = ({
@@ -20,6 +22,8 @@ const Button: FC<ButtonProps> = ({
     disabled = false,
     onClick,
     borderRadius = 'none',
+    imgLeft,
+    imgRight,
     ...props
 }) => {
     return (
@@ -37,7 +41,15 @@ const Button: FC<ButtonProps> = ({
             )}
             {...props}
         >
-            {children}
+            {imgLeft && (
+                <img className={styles.button__img} src={imgLeft} alt="" />
+            )}
+
+            {children && <span>{children}</span>}
+
+            {imgRight && (
+                <img className={styles.button__img} src={imgRight} alt="" />
+            )}
         </button>
     )
 }

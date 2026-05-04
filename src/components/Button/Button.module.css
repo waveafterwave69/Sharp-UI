@@ -1,6 +1,12 @@
 .button {
     padding: var(--padding-md);
     font-size: var(--text-md);
+    display: flex;
+    align-items: center;
+}
+
+.button__img {
+    width: 30px;
 }
 
 .button:disabled {
@@ -29,30 +35,55 @@
 .button__xs {
     padding: var(--padding-xs);
     font-size: var(--text-xs);
+    column-gap: 3px;
+
+    .button__img {
+        width: 17px;
+    }
 }
 
 .button__sm {
     padding: var(--padding-sm);
     font-size: var(--text-sm);
+
+    column-gap: 5px;
+
+    .button__img {
+        width: 20px;
+    }
 }
 
 .button__md {
     padding: var(--padding-md);
     font-size: var(--text-md);
+
+    column-gap: 6px;
+
+    .button__img {
+        width: 22px;
+    }
 }
 
 .button__lg {
     padding: var(--padding-lg);
     font-size: var(--text-lg);
+
+    column-gap: 8px;
+
+    .button__img {
+        width: 25px;
+    }
 }
 
 .button__xl {
     padding: var(--padding-xl);
     font-size: var(--text-xl);
-}
 
-.button__border-none {
-    border-radius: 0px;
+    column-gap: 11px;
+
+    .button__img {
+        width: 30px;
+    }
 }
 
 .button__border-none {
