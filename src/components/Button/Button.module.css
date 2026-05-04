@@ -35,11 +35,7 @@
 .button__xs {
     padding: var(--padding-xs);
     font-size: var(--text-xs);
-<<<<<<< HEAD
     column-gap: 5px;
-=======
-    column-gap: 3px;
->>>>>>> 81e855e000d63ab78aae51e757cfdae3f3e1b4a4
 
     .button__img {
         width: 17px;
@@ -50,11 +46,7 @@
     padding: var(--padding-sm);
     font-size: var(--text-sm);
 
-<<<<<<< HEAD
     column-gap: 7px;
-=======
-    column-gap: 5px;
->>>>>>> 81e855e000d63ab78aae51e757cfdae3f3e1b4a4
 
     .button__img {
         width: 20px;
@@ -65,11 +57,7 @@
     padding: var(--padding-md);
     font-size: var(--text-md);
 
-<<<<<<< HEAD
     column-gap: 9px;
-=======
-    column-gap: 6px;
->>>>>>> 81e855e000d63ab78aae51e757cfdae3f3e1b4a4
 
     .button__img {
         width: 22px;
@@ -80,11 +68,7 @@
     padding: var(--padding-lg);
     font-size: var(--text-lg);
 
-<<<<<<< HEAD
     column-gap: 10px;
-=======
-    column-gap: 8px;
->>>>>>> 81e855e000d63ab78aae51e757cfdae3f3e1b4a4
 
     .button__img {
         width: 25px;
@@ -95,11 +79,7 @@
     padding: var(--padding-xl);
     font-size: var(--text-xl);
 
-<<<<<<< HEAD
     column-gap: 13px;
-=======
-    column-gap: 11px;
->>>>>>> 81e855e000d63ab78aae51e757cfdae3f3e1b4a4
 
     .button__img {
         width: 30px;
