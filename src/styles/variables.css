@@ -20,11 +20,10 @@
     --text-xl: 24px;
 
     --padding-xs: 4px 8px;
-    --padding-sm: 8px 12px;
-    --padding-md: 12px 20px;
-
-    --padding-lg: 24px;
-    --padding-xl: 40px;
+    --padding-sm: 8px 14px;
+    --padding-md: 10px 24px;
+    --padding-lg: 12px 28px;
+    --padding-xl: 14px 38px;
 
     --radius-xs: 8px;
     --radius-sm: 12px;
