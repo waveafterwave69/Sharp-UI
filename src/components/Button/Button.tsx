@@ -9,6 +9,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     className?: string
     onClick?: () => void
     disabled?: boolean
+    borderRadius?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 }
 
 const Button: FC<ButtonProps> = ({
@@ -18,6 +19,7 @@ const Button: FC<ButtonProps> = ({
     className = '',
     disabled = false,
     onClick,
+    borderRadius = 'none',
     ...props
 }) => {
     return (
@@ -29,6 +31,7 @@ const Button: FC<ButtonProps> = ({
                 {
                     [styles[`button__${appearance}`]]: true,
                     [styles[`button__${size}`]]: true,
+                    [styles[`button__border-${borderRadius}`]]: true,
                 },
                 [className],
             )}

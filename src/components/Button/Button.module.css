@@ -1,7 +1,6 @@
 .button {
     padding: var(--padding-md);
     font-size: var(--text-md);
-    border-radius: var(--radius-md);
 }
 
 .button:disabled {
@@ -30,29 +29,52 @@
 .button__xs {
     padding: var(--padding-xs);
     font-size: var(--text-xs);
-    border-radius: var(--radius-xs);
 }
 
 .button__sm {
     padding: var(--padding-sm);
     font-size: var(--text-sm);
-    border-radius: var(--radius-sm);
 }
 
 .button__md {
     padding: var(--padding-md);
     font-size: var(--text-md);
-    border-radius: var(--radius-md);
 }
 
 .button__lg {
     padding: var(--padding-lg);
     font-size: var(--text-lg);
-    border-radius: var(--radius-lg);
 }
 
 .button__xl {
     padding: var(--padding-xl);
     font-size: var(--text-xl);
+}
+
+.button__border-none {
+    border-radius: 0px;
+}
+
+.button__border-none {
+    border-radius: 0px;
+}
+
+.button__border-xs {
+    border-radius: var(--radius-xs);
+}
+
+.button__border-sm {
+    border-radius: var(--radius-sm);
+}
+
+.button__border-md {
+    border-radius: var(--radius-md);
+}
+
+.button__border-lg {
+    border-radius: var(--radius-lg);
+}
+
+.button__border-xl {
     border-radius: var(--radius-xl);
 }

@@ -15,6 +15,7 @@ export const Primary: Story = {
     args: {
         appearance: 'primary',
         children: 'Кнопка',
+        borderRadius: 'none',
     },
 }
 
