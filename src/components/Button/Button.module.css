@@ -35,7 +35,7 @@
 .button__xs {
     padding: var(--padding-xs);
     font-size: var(--text-xs);
-    column-gap: 3px;
+    column-gap: 5px;
 
     .button__img {
         width: 17px;
@@ -46,7 +46,7 @@
     padding: var(--padding-sm);
     font-size: var(--text-sm);
 
-    column-gap: 5px;
+    column-gap: 7px;
 
     .button__img {
         width: 20px;
@@ -57,7 +57,7 @@
     padding: var(--padding-md);
     font-size: var(--text-md);
 
-    column-gap: 6px;
+    column-gap: 9px;
 
     .button__img {
         width: 22px;
@@ -68,7 +68,7 @@
     padding: var(--padding-lg);
     font-size: var(--text-lg);
 
-    column-gap: 8px;
+    column-gap: 10px;
 
     .button__img {
         width: 25px;
@@ -79,7 +79,7 @@
     padding: var(--padding-xl);
     font-size: var(--text-xl);
 
-    column-gap: 11px;
+    column-gap: 13px;
 
     .button__img {
         width: 30px;
