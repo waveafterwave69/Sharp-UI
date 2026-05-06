@@ -7,7 +7,6 @@ const meta: Meta<typeof Modal> = {
     title: 'Компоненты/Modal',
     component: Modal,
     tags: ['autodocs'],
-    // Настраиваем элементы управления (Controls)
     argTypes: {
         appearance: {
             control: 'select',
