@@ -19,25 +19,11 @@ export const Primary: Story = {
     },
 }
 
-export const Secondary: Story = {
-    args: {
-        appearance: 'secondary',
-        children: 'Кнопка',
-    },
-}
-
-export const Small: Story = {
+export const ButtonWithImg: Story = {
     args: {
         appearance: 'primary',
-        size: 'sm',
         children: 'Кнопка',
-    },
-}
-
-export const Large: Story = {
-    args: {
-        appearance: 'primary',
-        size: 'lg',
-        children: 'Кнопка',
+        borderRadius: 'none',
+        imgRight: 'https://cdn-icons-png.flaticon.com/512/9288/9288684.png',
     },
 }
