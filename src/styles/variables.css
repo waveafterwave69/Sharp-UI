@@ -1,6 +1,9 @@
 :root {
     --base-font: 'Poppins', sans-serif;
 
+    --bg-primary: #121212;
+    --bg-secondary: #f9f9f9;
+
     --text-primary: #121212;
     --text-secondary: #f9f9f9;
 
@@ -10,8 +13,10 @@
     --active-primary: #202020;
     --active-secondary: #e6e6e6;
 
-    --bg-primary: #121212;
-    --bg-secondary: #f9f9f9;
+    --color-success-text: #2E7D32;
+    --color-warning-text: #ED6C02;
+    --color-error-text:   #D32F2F;
+    --color-error-text-secondary: #E57373;
 
     --text-xs: 12px;
     --text-sm: 14px;
