@@ -1,0 +1,117 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.content {
+    position: relative;
+    background-color: var(--bg-primary, #fff);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.closeBtn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+}
+
+.closeBtn:hover {
+    opacity: 1;
+}
+
+.opened {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.opened .content {
+    transform: scale(1);
+}
+
+.modal__primary .content {
+    background-color: var(--bg-primary);
+    color: var(--text-secondary);
+}
+
+.modal__secondary .content {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.modal__xs .content {
+    width: 300px;
+    max-width: 90%;
+    padding: var(--padding-xs);
+}
+
+.modal__sm .content {
+    width: 450px;
+    max-width: 90%;
+    padding: var(--padding-sm);
+}
+
+.modal__md .content {
+    width: 600px;
+    max-width: 90%;
+    padding: var(--padding-md);
+}
+
+.modal__lg .content {
+    width: 800px;
+    max-width: 90%;
+    padding: var(--padding-lg);
+}
+
+.modal__xl .content {
+    width: 1100px;
+    max-width: 95%;
+    padding: var(--padding-xl);
+}
+
+.modal__border-none .content {
+    border-radius: 0;
+}
+
+.modal__border-xs .content {
+    border-radius: var(--radius-xs);
+}
+
+.modal__border-sm .content {
+    border-radius: var(--radius-sm);
+}
+
+.modal__border-md .content {
+    border-radius: var(--radius-md);
+}
+
+.modal__border-lg .content {
+    border-radius: var(--radius-lg);
+}
+
+.modal__border-xl .content {
+    border-radius: var(--radius-xl);
+}
