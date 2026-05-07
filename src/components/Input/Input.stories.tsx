@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Input } from './Input'
-
+import SearchIcon from './assets/search.svg?react'
 
 type PlaygroundArgs = {
     label: string;
@@ -9,12 +9,11 @@ type PlaygroundArgs = {
     errorText: string;
 
     appearance: 'primary' | 'secondary';
-    inputSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    size: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
     borderRadius: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-    // override
-    labelSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-    errorSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    id: string;
+    htmlFor: string;
 };
 
 const meta: Meta<typeof Input> = {
@@ -26,6 +25,11 @@ const meta: Meta<typeof Input> = {
             control: 'select',
             options: ['primary', 'secondary'],
             table: { category: 'Global' },
+        },
+        size: {
+            control: 'select',
+            options: ['xs', 'sm', 'md', 'lg', 'xl'],
+            table: { category: 'Global' }
         },
         borderRadius: {
             control: 'select',
@@ -44,19 +48,22 @@ export const Playground: StoryObj<PlaygroundArgs> = {
         error: false,
         errorText: 'Неверный email',
         appearance: "secondary",
-        inputSize: "lg",
+        size: "lg",
         borderRadius: 'none',
+        id: 'input',
+        htmlFor: 'input',
     },
     render: (args) => (
         <Input
             error={args.error}
             appearance={args.appearance}
-            size={args.inputSize}
             borderRadius={args.borderRadius}
+            size={args.size}
+            icon={<SearchIcon/>}
             errorId="error-id"
         >
-            <Input.Label>{args.label}</Input.Label>
-            <Input.Field placeholder={args.placeholder}/>
+            <Input.Label htmlFor={args.htmlFor}>{args.label}</Input.Label>
+            <Input.Field id={args.id} placeholder={args.placeholder}/>
             <Input.Error>{args.errorText}</Input.Error>
         </Input>
     ),

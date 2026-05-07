@@ -8,6 +8,7 @@ import { playwright } from '@vitest/browser-playwright'
 import dts from 'vite-plugin-dts'
 import { libInjectCss } from 'vite-plugin-lib-inject-css'
 import react from '@vitejs/plugin-react'
+import svgr from 'vite-plugin-svgr'
 
 const dirname =
     typeof __dirname !== 'undefined'
@@ -18,9 +19,10 @@ export default defineConfig({
     plugins: [
         react(),
         libInjectCss(),
+        svgr(),
         dts({
             insertTypesEntry: true,
-            rollupTypes: true,
+            bundleTypes: true,
             include: ['src'],
             tsconfigPath: './tsconfig.app.json',
         }),
