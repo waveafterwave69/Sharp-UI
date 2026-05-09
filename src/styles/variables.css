@@ -18,6 +18,9 @@
     --color-error-text:   #D32F2F;
     --color-error-text-secondary: #E57373;
 
+    --scrollbar-thumb: rgba(255,255,255,0.2);
+    --scrollbar-thumb-hover: rgba(255,255,255,0.35);
+
     --text-xs: 12px;
     --text-sm: 14px;
     --text-md: 16px;
