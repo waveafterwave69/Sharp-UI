@@ -98,7 +98,10 @@ export function Select<T>({
                             [styles.label_disabled]: disabled,
                             [styles.label_error]: Boolean(error),
                         },
-                        [styles[`label_${appearance}`]]
+                        [
+                            styles[`label_${appearance}`],
+                            styles[`label_size_${size}`],
+                        ]
                     )}
                 >
                     {label}

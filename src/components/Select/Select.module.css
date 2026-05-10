@@ -27,6 +27,26 @@
     color: var(--text-secondary);
 }
 
+.label_size_xs {
+    font-size: var(--text-xs);
+}
+
+.label_size_sm {
+    font-size: var(--text-sm);
+}
+
+.label_size_md {
+    font-size: var(--text-md);
+}
+
+.label_size_lg {
+    font-size: var(--text-lg);
+}
+
+.label_size_xl {
+    font-size: var(--text-xl);
+}
+
 .label_disabled {
     opacity: 0.5;
 }
