@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import Card from './Card'
+import Button from '../Button/Button'
+import { Accordion } from '../Accrodion/Accrodion'
 
 const meta: Meta<typeof Card> = {
     title: 'Компоненты/Card',
@@ -41,15 +43,27 @@ export const ProductCard: Story = {
                     alt="Product"
                     style={{ width: '100%', borderRadius: '4px' }}
                 />
-                <h3 style={{ margin: '15px 0 10px' }}>рик овенс</h3>
-                <p style={{ color: '#666', fontSize: '14px' }}>
-                    реальный жесткий тру designer. реальный жесткий тру
+                <h3 style={{ margin: '15px 0 10px', marginBottom: '10px' }}>
+                    РИК ОВЕНС
+                </h3>
+                <Accordion
+                    appearance="secondary"
+                    title="инфа о пацыке"
+                    description=" реальный жесткий тру designer. реальный жесткий тру
                     designer. реальный жесткий тру designer. реальный жесткий
-                    тру designer.
-                </p>
+                    тру designer."
+                />
+
                 <div style={{ marginTop: '20px', fontWeight: 'bold' }}>
                     3 500 ₽
                 </div>
+                <Button
+                    appearance="secondary"
+                    borderRadius="xs"
+                    style={{ width: '100%', marginTop: '10px' }}
+                >
+                    Купить
+                </Button>
             </div>
         </Card>
     ),
