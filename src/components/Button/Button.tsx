@@ -45,7 +45,9 @@ const Button: FC<ButtonProps> = ({
                 <img className={styles.button__img} src={imgLeft} alt="" />
             )}
 
-            {children && <span>{children}</span>}
+            {children && (
+                <span className={styles.button__text}>{children}</span>
+            )}
 
             {imgRight && (
                 <img className={styles.button__img} src={imgRight} alt="" />

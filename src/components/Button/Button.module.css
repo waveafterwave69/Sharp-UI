@@ -9,6 +9,11 @@
     width: 30px;
 }
 
+.button__text {
+    text-align: center;
+    margin: 0 auto;
+}
+
 .button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
