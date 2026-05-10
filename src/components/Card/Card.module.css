@@ -1,0 +1,67 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.card__primary {
+    background-color: var(--bg-primary);
+    color: var(--text-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.26);
+}
+
+.card__secondary {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid rgba(0, 0, 0, 0.26);
+}
+
+.card__xs {
+    padding: var(--padding-xs);
+    font-size: var(--text-xs);
+}
+
+.card__sm {
+    padding: var(--padding-sm);
+    font-size: var(--text-sm);
+}
+
+.card__md {
+    padding: var(--padding-md);
+    font-size: var(--text-md);
+}
+
+.card__lg {
+    padding: var(--padding-lg);
+    font-size: var(--text-lg);
+}
+
+.card__xl {
+    padding: var(--padding-xl);
+    font-size: var(--text-xl);
+}
+
+.card__border-none {
+    border-radius: 0px;
+}
+
+.card__border-xs {
+    border-radius: var(--radius-xs);
+}
+
+.card__border-sm {
+    border-radius: var(--radius-sm);
+}
+
+.card__border-md {
+    border-radius: var(--radius-md);
+}
+
+.card__border-lg {
+    border-radius: var(--radius-lg);
+}
+
+.card__border-xl {
+    border-radius: var(--radius-xl);
+}
