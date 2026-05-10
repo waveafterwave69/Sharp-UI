@@ -80,6 +80,26 @@
     padding-left: 42px;
 }
 
+.field__xs.field__withErrorIcon {
+    padding-right: 30px;
+}
+
+.field__sm.field__withErrorIcon {
+    padding-right: 34px;
+}
+
+.field__md.field__withErrorIcon {
+    padding-right: 44px;
+}
+
+.field__lg.field__withErrorIcon {
+    padding-right: 50px;
+}
+
+.field__xl.field__withErrorIcon {
+    padding-right: 60px;
+}
+
 .icon {
     position: absolute;
     left: 12px;
@@ -94,13 +114,52 @@
     justify-content: center;
 }
 
+.icon__primary {
+    color: var(--text-secondary);
+}
+
+.icon__secondary {
+    color: var(--text-primary);
+}
+
 .errorIcon {
     position: absolute;
-    width: 25px;
-    height: 25px;
-    right: 15px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
+
+    flex-shrink: 0;
+    pointer-events: none;
+}
+
+.errorIcon__xs {
+    width: 14px;
+    height: 14px;
+    right: 8px;
+}
+
+.errorIcon__sm {
+    width: 16px;
+    height: 16px;
+    right: 10px;
+}
+
+.errorIcon__md {
+    width: 18px;
+    height: 18px;
+    right: 14px;
+}
+
+.errorIcon__lg {
+    width: 22px;
+    height: 22px;
+    right: 16px;
+}
+
+.errorIcon__xl {
+    width: 25px;
+    height: 25px;
+    right: 20px;
 }
 
 .error__icon__primary path {
