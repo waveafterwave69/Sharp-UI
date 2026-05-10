@@ -112,7 +112,13 @@ const Field = ({
     return (
         <div className={styles.field_container}>
             {ctx.icon && (
-                <span className={styles.icon}>
+                <span
+                    className={classNames(
+                        styles.icon,
+                        {},
+                        [styles[`icon__${APPEARANCE}`]]
+                    )}
+                >
                     {ctx.icon}
                 </span>
             )}
@@ -121,6 +127,7 @@ const Field = ({
                 className={classNames(styles.field,
                     {
                         [styles.field__withLeftIcon]: !!ctx.icon,
+                        [styles.field__withErrorIcon]: !!ctx.error,
                     },
                     [
                         className,
@@ -135,7 +142,10 @@ const Field = ({
                     className={classNames(
                         styles.errorIcon,
                         {},
-                        [styles[`error__icon__${APPEARANCE}`]]
+                        [
+                            styles[`error__icon__${APPEARANCE}`],
+                            styles[`errorIcon__${SIZE}`],
+                        ]
                     )}
                     width="25px"
                     height="25px"
