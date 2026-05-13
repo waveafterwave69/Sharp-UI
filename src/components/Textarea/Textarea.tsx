@@ -82,16 +82,19 @@ const Label: FC<LabelProps> = ({
     const APPEARANCE = appearance ?? ctx.appearance ?? 'primary'
 
     return (
-        <label
-            className={classNames(styles.label, {}, [
-                className,
-                styles[`label__${SIZE}`],
-                styles[`label__${APPEARANCE}`],
-            ])}
-            {...props}
-        >
-            {children}
-        </label>
+        <div>
+            {ctx.icon && <span className={styles.icon}>{ctx.icon}</span>}
+            <label
+                className={classNames(styles.label, {}, [
+                    className,
+                    styles[`label__${SIZE}`],
+                    styles[`label__${APPEARANCE}`],
+                ])}
+                {...props}
+            >
+                {children}
+            </label>
+        </div>
     )
 }
 
@@ -132,11 +135,10 @@ const Field: FC<FieldProps> = ({
 
     return (
         <div className={styles.field_container}>
-            {ctx.icon && <span className={styles.icon}>{ctx.icon}</span>}
             <textarea
                 ref={textareaRef}
                 aria-describedby={ctx.error ? ctx.errorId : undefined}
-                onChange={handleChange} // Меняем на onChange
+                onChange={handleChange}
                 style={{ maxHeight }}
                 className={classNames(
                     styles.field,
