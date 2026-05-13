@@ -13,13 +13,13 @@
     --active-primary: #202020;
     --active-secondary: #e6e6e6;
 
-    --color-success-text: #2E7D32;
-    --color-warning-text: #ED6C02;
-    --color-error-text:   #D32F2F;
-    --color-error-text-secondary: #E57373;
+    --color-success-text: #2e7d32;
+    --color-warning-text: #ed6c02;
+    --color-error-text: #d32f2f;
+    --color-error-text-secondary: #e57373;
 
-    --scrollbar-thumb: rgba(255,255,255,0.2);
-    --scrollbar-thumb-hover: rgba(255,255,255,0.35);
+    --scrollbar-thumb: rgba(255, 255, 255, 0.2);
+    --scrollbar-thumb-hover: rgba(255, 255, 255, 0.35);
 
     --text-xs: 12px;
     --text-sm: 14px;
