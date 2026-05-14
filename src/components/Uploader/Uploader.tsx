@@ -105,7 +105,6 @@ const Uploader: FC<UploaderProps> = ({
 
     return (
         <div className={classNames(styles.uploader, {}, [className])}>
-            {/* Зона клика и сброса файлов */}
             <div
                 className={classNames(styles.uploader__zone, {
                     [styles[`uploader__${appearance}`]]: true,
@@ -141,7 +140,6 @@ const Uploader: FC<UploaderProps> = ({
                 />
             </div>
 
-            {/* Окошко со списком файлов ниже */}
             {hasFiles && (
                 <div
                     className={classNames(styles.uploader__filesWindow, {
@@ -165,7 +163,6 @@ const Uploader: FC<UploaderProps> = ({
                         </button>
                     </div>
 
-                    {/* Список элементов */}
                     <div className={styles.uploader__list}>
                         {selectedFiles.map((file, idx) => (
                             <div
