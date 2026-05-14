@@ -149,7 +149,6 @@ const Uploader: FC<UploaderProps> = ({
                             true,
                     })}
                 >
-                    {/* Шапка окошка с кнопкой очистки */}
                     <div className={styles.uploader__windowHeader}>
                         <span className={styles.uploader__windowCount}>
                             Файлов выбрано: {selectedFiles.length}
