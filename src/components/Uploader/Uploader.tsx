@@ -10,14 +10,33 @@ import {
 import styles from './Uploader.module.css'
 import { classNames } from '../../helpers/helpers'
 
-interface UploaderProps extends Omit<ComponentPropsWithRef<'input'>, 'size'> {
+const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024 * 1024) {
+        return `${(bytes / 1024).toFixed(1)} KB`
+    }
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+
+interface UploaderProps extends Omit<
+    ComponentPropsWithRef<'input'>,
+    'size' | 'multiple' | 'accept'
+> {
     appearance?: 'primary' | 'secondary'
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
     text?: string
     title?: string
     className?: string
-    onFilesSelect?: (files: File[]) => void
     borderRadius?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+    selectedFiles: File[]
+    onFilesSelect: (files: File[]) => void
+    multiple?: boolean
+    accept?: string
+    maxFiles?: number
+    maxFileSize?: number
+    onValidationError?: (
+        errorType: 'maxFiles' | 'maxFileSize' | 'accept',
+        file?: File,
+    ) => void
 }
 
 const Uploader: FC<UploaderProps> = ({
@@ -26,33 +45,109 @@ const Uploader: FC<UploaderProps> = ({
     text = '',
     title = '',
     className = '',
-    onFilesSelect,
     borderRadius = 'none',
+    selectedFiles = [],
+    onFilesSelect,
+    multiple = false,
+    accept,
+    maxFiles,
+    maxFileSize,
+    onValidationError,
     ...props
 }) => {
     const [isDragOver, setIsDragOver] = useState<boolean>(false)
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([])
     const fileInputRef = useRef<HTMLInputElement>(null)
 
+    // Проверяем, достигнут ли лимит, либо заблокирован ли компонент извне
+    const isLimitReached =
+        maxFiles !== undefined && selectedFiles.length >= maxFiles
+    const isDisabled = props.disabled || isLimitReached
+
     const handleZoneClick = () => {
+        if (isDisabled) return
         fileInputRef.current?.click()
     }
 
     const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+        if (isDisabled) return
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault()
             handleZoneClick()
         }
     }
 
+    const validateAccept = (file: File): boolean => {
+        if (!accept) return true
+
+        const acceptTypes = accept.split(',').map((type) => type.trim())
+        const fileName = file.name.toLowerCase()
+        const fileType = file.type.toLowerCase()
+
+        return acceptTypes.some((type) => {
+            if (type.startsWith('.')) {
+                return fileName.endsWith(type.toLowerCase())
+            }
+            if (type.endsWith('/*')) {
+                const baseType = type.replace('/*', '')
+                return fileType.startsWith(baseType)
+            }
+            return fileType === type
+        })
+    }
+
+    const processFiles = (newFiles: File[]) => {
+        if (isDisabled) return
+
+        let filesToProcess = multiple ? newFiles : [newFiles[0]]
+
+        if (accept) {
+            const validTypes = filesToProcess.filter(validateAccept)
+            if (validTypes.length !== filesToProcess.length) {
+                const invalidFile = filesToProcess.find(
+                    (f) => !validateAccept(f),
+                )
+                onValidationError?.('accept', invalidFile)
+                return
+            }
+        }
+
+        if (maxFileSize) {
+            const oversizedFile = filesToProcess.find(
+                (file) => file.size > maxFileSize,
+            )
+            if (oversizedFile) {
+                onValidationError?.('maxFileSize', oversizedFile)
+                return
+            }
+        }
+
+        const currentList = multiple ? selectedFiles : []
+        const updated = [...currentList, ...filesToProcess].filter(
+            (file, index, self) =>
+                self.findIndex(
+                    (f) => f.name === file.name && f.size === file.size,
+                ) === index,
+        )
+
+        if (maxFiles && updated.length > maxFiles) {
+            onValidationError?.('maxFiles')
+            return
+        }
+
+        onFilesSelect(updated)
+    }
+
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             processFiles(Array.from(e.target.files))
         }
+
+        e.target.value = ''
     }
 
     const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault()
+        if (isDisabled) return
         setIsDragOver(true)
     }
 
@@ -63,42 +158,19 @@ const Uploader: FC<UploaderProps> = ({
     const handleDrop = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault()
         setIsDragOver(false)
+        if (isDisabled) return
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             processFiles(Array.from(e.dataTransfer.files))
         }
     }
 
-    const processFiles = (newFiles: File[]) => {
-        setSelectedFiles((prev) => {
-            const updated = [...prev, ...newFiles].filter(
-                (file, index, self) =>
-                    self.findIndex(
-                        (f) => f.name === file.name && f.size === file.size,
-                    ) === index,
-            )
-            if (onFilesSelect) onFilesSelect(updated)
-            return updated
-        })
-    }
-
     const handleRemoveFile = (indexToRemove: number) => {
-        setSelectedFiles((prev) => {
-            const updated = prev.filter((_, idx) => idx !== indexToRemove)
-            if (onFilesSelect) onFilesSelect(updated)
-
-            if (updated.length === 0 && fileInputRef.current) {
-                fileInputRef.current.value = ''
-            }
-            return updated
-        })
+        const updated = selectedFiles.filter((_, idx) => idx !== indexToRemove)
+        onFilesSelect(updated)
     }
 
     const handleClearAll = () => {
-        setSelectedFiles([])
-        if (onFilesSelect) onFilesSelect([])
-        if (fileInputRef.current) {
-            fileInputRef.current.value = ''
-        }
+        onFilesSelect([])
     }
 
     const hasFiles = selectedFiles.length > 0
@@ -110,7 +182,8 @@ const Uploader: FC<UploaderProps> = ({
                     [styles[`uploader__${appearance}`]]: true,
                     [styles[`uploader__${size}`]]: true,
                     [styles[`uploader__border-${borderRadius}`]]: true,
-                    [styles['uploader__zone--over']]: isDragOver,
+                    [styles['uploader__zone--over']]: isDragOver && !isDisabled,
+                    [styles['uploader__zone--disabled']]: isDisabled,
                 })}
                 onClick={handleZoneClick}
                 onKeyDown={handleKeyDown}
@@ -119,8 +192,9 @@ const Uploader: FC<UploaderProps> = ({
                 onDragEnd={handleDragLeave}
                 onDrop={handleDrop}
                 role="button"
-                tabIndex={0}
+                tabIndex={isDisabled ? -1 : 0}
                 aria-label="Загрузить файлы"
+                aria-disabled={isDisabled}
             >
                 <div className={styles.uploader__content}>
                     <h2 className={styles.uploader__title}>
@@ -135,7 +209,9 @@ const Uploader: FC<UploaderProps> = ({
                     ref={fileInputRef}
                     className={styles.uploader__input}
                     onChange={handleFileChange}
-                    multiple
+                    multiple={multiple}
+                    accept={accept}
+                    disabled={isDisabled}
                     hidden
                 />
             </div>
@@ -183,7 +259,7 @@ const Uploader: FC<UploaderProps> = ({
                                         {file.name}
                                     </span>
                                     <span className={styles.uploader__fileSize}>
-                                        {(file.size / 1024).toFixed(1)} KB
+                                        {formatFileSize(file.size)}
                                     </span>
                                 </div>
                                 <button

@@ -477,3 +477,22 @@
 .uploader__window-border-xl {
     border-radius: var(--radius-xl);
 }
+
+.uploader__zone--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    filter: grayscale(0.4);
+    pointer-events: none;
+}
+
+.uploader__zone--disabled.uploader__primary:hover {
+    background-color: var(--bg-primary);
+}
+
+.uploader__zone--disabled.uploader__secondary:hover {
+    background-color: var(--text-secondary);
+}
+
+.uploader__zone--disabled:focus-visible {
+    box-shadow: none;
+}
