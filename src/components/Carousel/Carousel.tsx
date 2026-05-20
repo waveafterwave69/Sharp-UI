@@ -1,89 +1,63 @@
 import React, {
     type FC,
-    useEffect,
     useMemo,
     useState,
-    type KeyboardEvent,
+    type KeyboardEvent, useRef, useEffect
 } from "react";
 import styles from "./Carousel.module.css";
 import Arrow from "./assets/arrow.svg?react";
 import { classNames } from "../../helpers/helpers.ts";
-import { createPortal } from "react-dom";
 
 interface CarouselProps {
-    isOpen: boolean;
-    onClose: () => void;
     children: React.ReactNode;
     borderRadius?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
 const Carousel: FC<CarouselProps> = ({
-    isOpen,
-    onClose,
     children,
     borderRadius = 'none',
 }) => {
     const media = useMemo(() => React.Children.toArray(children), [children]);
+
     const [activeMedia, setActiveMedia] = useState(0);
+    const refs = useRef<(HTMLDivElement | null)[]>([]);
+    const [widths, setWidths] = useState<number[]>([]);
+
+    useEffect(() => {
+        setWidths(refs.current.map((el) => el?.clientWidth ?? 0));
+    }, [media]);
+
+    const translateX = widths
+        .slice(0, activeMedia)
+        .reduce((sum, width) => sum + width, 0);
 
     const setNext = (e?: React.MouseEvent | KeyboardEvent) => {
         e?.stopPropagation();
 
-        setActiveMedia((prev) =>
-            prev + 1 >= media.length ? 0 : prev + 1
-        );
+        setActiveMedia((prev) => {
+            const next = prev + 1;
+
+            if(next >= media.length) return media.length;
+
+            return next;
+        });
     };
 
     const setPrev = (e?: React.MouseEvent | KeyboardEvent) => {
         e?.stopPropagation();
 
-        setActiveMedia((prev) =>
-            prev - 1 < 0 ? media.length - 1 : prev - 1
-        );
+        setActiveMedia((prev) => {
+            const next =  prev - 1;
+
+            if(next <= 0) return 0;
+
+            return next;
+        });
     };
 
-    useEffect(() => {
-        if (!isOpen) return;
-
-        const handleKeyDown = (e: KeyboardEvent | globalThis.KeyboardEvent) => {
-            if (e.key === "ArrowRight") {
-                setNext();
-            }
-
-            if (e.key === "ArrowLeft") {
-                setPrev();
-            }
-
-            if (e.key === "Escape") {
-                onClose();
-            }
-        };
-
-        window.addEventListener("keydown", handleKeyDown);
-
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-        };
-    }, [isOpen]);
-
-    useEffect(() => {
-        if (!isOpen) return;
-
-        document.body.style.overflow = "hidden";
-
-        return () => {
-            document.body.style.overflow = "";
-        };
-    }, [isOpen]);
-
-    if (!isOpen) return null;
-
-    return createPortal(
+    return (
         <div
             className={styles.overlay}
-            onClick={onClose}
-            role="dialog"
-            aria-modal="true"
         >
             <button
                 type="button"
@@ -103,23 +77,26 @@ const Carousel: FC<CarouselProps> = ({
             </button>
 
             <div
-                className={styles.media_container}
+                className={styles.media_viewport}
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className={styles.media}>
-                    {media[activeMedia]}
-                </div>
-
                 <div
-                    className={classNames(
-                        styles.pagination,
-                        {},
-                        [
-                            styles[`pagination__border__${borderRadius}`]
-                        ]
-                    )}
+                    className={styles.media_container}
+                    style={{
+                        transform: `translateX(-${translateX}px)`,
+                    }}
                 >
-                    {activeMedia + 1} / {media.length}
+                    {media.map((m, index) => (
+                        <div
+                            key={index}
+                            ref={(el) => {
+                                refs.current[index] = el;
+                            }}
+                            className={styles.media}
+                        >
+                            {m}
+                        </div>
+                    ))}
                 </div>
             </div>
 
@@ -138,8 +115,7 @@ const Carousel: FC<CarouselProps> = ({
             >
                 <Arrow />
             </button>
-        </div>,
-        document.body
+        </div>
     );
 };
 
