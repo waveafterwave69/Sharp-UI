@@ -1,4 +1,4 @@
-import { type FC, type ChangeEvent, useState, useEffect } from 'react'
+import { type FC, type ChangeEvent } from 'react'
 import styles from './Range.module.css'
 import { classNames } from '../../helpers/helpers'
 
@@ -11,8 +11,8 @@ export interface RangeProps {
     min?: number
     max?: number
     step?: number
-    value?: RangeValue
-    onChange?: (value: RangeValue) => void
+    value: RangeValue
+    onChange: (value: RangeValue) => void
     disabled?: boolean
     className?: string
     appearance?: 'primary' | 'secondary'
@@ -30,32 +30,21 @@ const Range: FC<RangeProps> = ({
     appearance = 'primary',
     size = 'md',
 }) => {
-    const [rangeValue, setRangeValue] = useState<RangeValue>(
-        value ?? { min, max },
-    )
-
-    useEffect(() => {
-        if (value) {
-            setRangeValue(value)
-        }
-    }, [value])
+    const currentMin = value?.min ?? min
+    const currentMax = value?.max ?? max
 
     const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const newMin = Math.min(Number(e.target.value), rangeValue.max - step)
-        const updated = { ...rangeValue, min: newMin }
-        setRangeValue(updated)
-        onChange?.(updated)
+        const newMin = Math.min(Number(e.target.value), currentMax - step)
+        onChange({ min: newMin, max: currentMax })
     }
 
     const handleMaxChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const newMax = Math.max(Number(e.target.value), rangeValue.min + step)
-        const updated = { ...rangeValue, max: newMax }
-        setRangeValue(updated)
-        onChange?.(updated)
+        const newMax = Math.max(Number(e.target.value), currentMin + step)
+        onChange({ min: currentMin, max: newMax })
     }
 
-    const minPercent = ((rangeValue.min - min) / (max - min)) * 100
-    const maxPercent = ((rangeValue.max - min) / (max - min)) * 100
+    const minPercent = ((currentMin - min) / (max - min)) * 100
+    const maxPercent = ((currentMax - min) / (max - min)) * 100
 
     return (
         <div
@@ -78,7 +67,7 @@ const Range: FC<RangeProps> = ({
                         left: `calc(${minPercent}% + (var(--range-thumb-size) / 2) - (${minPercent} * var(--range-thumb-size) / 100))`,
                     }}
                 >
-                    {rangeValue.min}
+                    {currentMin}
                 </div>
 
                 <div
@@ -89,7 +78,7 @@ const Range: FC<RangeProps> = ({
                         left: `calc(${maxPercent}% + (var(--range-thumb-size) / 2) - (${maxPercent} * var(--range-thumb-size) / 100))`,
                     }}
                 >
-                    {rangeValue.max}
+                    {currentMax}
                 </div>
 
                 <div
@@ -105,7 +94,7 @@ const Range: FC<RangeProps> = ({
                     min={min}
                     max={max}
                     step={step}
-                    value={rangeValue.min}
+                    value={currentMin}
                     onChange={handleMinChange}
                     disabled={disabled}
                     className={classNames(styles['range__input'], {}, [
@@ -113,9 +102,7 @@ const Range: FC<RangeProps> = ({
                     ])}
                     style={{
                         zIndex:
-                            rangeValue.min > max - (max - min) / 2
-                                ? 5
-                                : undefined,
+                            currentMin > max - (max - min) / 2 ? 5 : undefined,
                     }}
                 />
 
@@ -124,7 +111,7 @@ const Range: FC<RangeProps> = ({
                     min={min}
                     max={max}
                     step={step}
-                    value={rangeValue.max}
+                    value={currentMax}
                     onChange={handleMaxChange}
                     disabled={disabled}
                     className={classNames(styles['range__input'], {}, [
