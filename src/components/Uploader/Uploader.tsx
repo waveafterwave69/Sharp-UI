@@ -1,42 +1,102 @@
 import {
     type FC,
-    type DragEvent,
     type ChangeEvent,
     type KeyboardEvent,
-    type ComponentPropsWithRef,
+    type DragEvent,
     useState,
     useRef,
+    useEffect,
 } from 'react'
 import styles from './Uploader.module.css'
 import { classNames } from '../../helpers/helpers'
 
 const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024 * 1024) {
-        return `${(bytes / 1024).toFixed(1)} KB`
-    }
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
-interface UploaderProps extends Omit<
-    ComponentPropsWithRef<'input'>,
-    'size' | 'multiple' | 'accept'
+export type UploaderErrorType = 'accept' | 'maxFileSize' | 'maxFiles'
+
+export interface UploaderProps extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    'onChange' | 'size'
 > {
     appearance?: 'primary' | 'secondary'
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
     text?: string
     title?: string
-    className?: string
-    borderRadius?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+    borderRadius?: 'none' | 'sm' | 'md' | 'lg' | 'full'
     selectedFiles: File[]
     onFilesSelect: (files: File[]) => void
-    multiple?: boolean
-    accept?: string
     maxFiles?: number
     maxFileSize?: number
-    onValidationError?: (
-        errorType: 'maxFiles' | 'maxFileSize' | 'accept',
-        file?: File,
-    ) => void
+    onValidationError?: (type: UploaderErrorType, file?: File) => void
+}
+
+interface ValidationResult {
+    isValid: boolean
+    type?: UploaderErrorType
+    invalidFile?: File
+}
+
+const validateFiles = (
+    filesToProcess: File[],
+    currentFilesCount: number,
+    options: {
+        accept?: string
+        maxFileSize?: number
+        maxFiles?: number
+        multiple: boolean
+    },
+): ValidationResult => {
+    const { accept, maxFileSize, maxFiles, multiple } = options
+
+    if (accept) {
+        const acceptTypes = accept
+            .split(',')
+            .map((type) => type.trim().toLowerCase())
+
+        const isTypeValid = (file: File) => {
+            const fileName = file.name.toLowerCase()
+            const fileType = file.type.toLowerCase()
+
+            return acceptTypes.some((type) => {
+                if (type.startsWith('.')) return fileName.endsWith(type)
+                if (type.endsWith('/*'))
+                    return fileType.startsWith(type.replace('/*', ''))
+                return fileType === type
+            })
+        }
+
+        const invalidFile = filesToProcess.find((file) => !isTypeValid(file))
+        if (invalidFile) return { isValid: false, type: 'accept', invalidFile }
+    }
+
+    if (maxFileSize) {
+        const oversizedFile = filesToProcess.find(
+            (file) => file.size > maxFileSize,
+        )
+        if (oversizedFile)
+            return {
+                isValid: false,
+                type: 'maxFileSize',
+                invalidFile: oversizedFile,
+            }
+    }
+
+    if (maxFiles) {
+        const expectedCount = multiple
+            ? currentFilesCount + filesToProcess.length
+            : filesToProcess.length
+        if (expectedCount > maxFiles) {
+            return { isValid: false, type: 'maxFiles' }
+        }
+    }
+
+    return { isValid: true }
 }
 
 const Uploader: FC<UploaderProps> = ({
@@ -56,12 +116,29 @@ const Uploader: FC<UploaderProps> = ({
     ...props
 }) => {
     const [isDragOver, setIsDragOver] = useState<boolean>(false)
+    const [error, setError] = useState<string | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
-    // Проверяем, достигнут ли лимит, либо заблокирован ли компонент извне
     const isLimitReached =
         maxFiles !== undefined && selectedFiles.length >= maxFiles
     const isDisabled = props.disabled || isLimitReached
+
+    useEffect(() => {
+        if (selectedFiles.length === 0) setError(null)
+    }, [selectedFiles])
+
+    const getErrorMessage = (type: UploaderErrorType, file?: File): string => {
+        switch (type) {
+            case 'accept':
+                return `Неверный формат файла ${file ? `"${file.name}"` : ''}. Разрешены: ${accept}`
+            case 'maxFileSize':
+                return `Файл ${file ? `"${file.name}"` : ''} слишком большой. Макс. размер: ${formatFileSize(maxFileSize || 0)}`
+            case 'maxFiles':
+                return `Превышено максимальное количество файлов. Лимит: ${maxFiles}`
+            default:
+                return 'Ошибка при загрузке файла'
+        }
+    }
 
     const handleZoneClick = () => {
         if (isDisabled) return
@@ -76,49 +153,27 @@ const Uploader: FC<UploaderProps> = ({
         }
     }
 
-    const validateAccept = (file: File): boolean => {
-        if (!accept) return true
-
-        const acceptTypes = accept.split(',').map((type) => type.trim())
-        const fileName = file.name.toLowerCase()
-        const fileType = file.type.toLowerCase()
-
-        return acceptTypes.some((type) => {
-            if (type.startsWith('.')) {
-                return fileName.endsWith(type.toLowerCase())
-            }
-            if (type.endsWith('/*')) {
-                const baseType = type.replace('/*', '')
-                return fileType.startsWith(baseType)
-            }
-            return fileType === type
-        })
-    }
-
     const processFiles = (newFiles: File[]) => {
         if (isDisabled) return
+        setError(null)
 
-        let filesToProcess = multiple ? newFiles : [newFiles[0]]
+        const filesToProcess = multiple ? newFiles : [newFiles[0]]
 
-        if (accept) {
-            const validTypes = filesToProcess.filter(validateAccept)
-            if (validTypes.length !== filesToProcess.length) {
-                const invalidFile = filesToProcess.find(
-                    (f) => !validateAccept(f),
-                )
-                onValidationError?.('accept', invalidFile)
-                return
-            }
-        }
+        const validation = validateFiles(filesToProcess, selectedFiles.length, {
+            accept,
+            maxFileSize,
+            maxFiles,
+            multiple,
+        })
 
-        if (maxFileSize) {
-            const oversizedFile = filesToProcess.find(
-                (file) => file.size > maxFileSize,
+        if (!validation.isValid && validation.type) {
+            const errorMsg = getErrorMessage(
+                validation.type,
+                validation.invalidFile,
             )
-            if (oversizedFile) {
-                onValidationError?.('maxFileSize', oversizedFile)
-                return
-            }
+            setError(errorMsg)
+            onValidationError?.(validation.type, validation.invalidFile)
+            return
         }
 
         const currentList = multiple ? selectedFiles : []
@@ -129,11 +184,6 @@ const Uploader: FC<UploaderProps> = ({
                 ) === index,
         )
 
-        if (maxFiles && updated.length > maxFiles) {
-            onValidationError?.('maxFiles')
-            return
-        }
-
         onFilesSelect(updated)
     }
 
@@ -141,7 +191,6 @@ const Uploader: FC<UploaderProps> = ({
         if (e.target.files && e.target.files.length > 0) {
             processFiles(Array.from(e.target.files))
         }
-
         e.target.value = ''
     }
 
@@ -184,6 +233,7 @@ const Uploader: FC<UploaderProps> = ({
                     [styles[`uploader__border-${borderRadius}`]]: true,
                     [styles['uploader__zone--over']]: isDragOver && !isDisabled,
                     [styles['uploader__zone--disabled']]: isDisabled,
+                    [styles['uploader__zone--error']]: !!error,
                 })}
                 onClick={handleZoneClick}
                 onKeyDown={handleKeyDown}
@@ -195,6 +245,7 @@ const Uploader: FC<UploaderProps> = ({
                 tabIndex={isDisabled ? -1 : 0}
                 aria-label="Загрузить файлы"
                 aria-disabled={isDisabled}
+                aria-invalid={!!error}
             >
                 <div className={styles.uploader__content}>
                     <h2 className={styles.uploader__title}>
@@ -215,6 +266,14 @@ const Uploader: FC<UploaderProps> = ({
                     hidden
                 />
             </div>
+
+            {/* 4. Блок отображения внутренней ошибки */}
+            {error && (
+                <div className={styles.uploader__error}>
+                    <span className={styles.uploader__errorIcon}>⚠️</span>
+                    <span className={styles.uploader__errorText}>{error}</span>
+                </div>
+            )}
 
             {hasFiles && (
                 <div
@@ -265,28 +324,13 @@ const Uploader: FC<UploaderProps> = ({
                                 <button
                                     type="button"
                                     className={styles.uploader__clearBtn}
-                                    onClick={() => handleRemoveFile(idx)}
-                                    aria-label={`Удалить ${file.name}`}
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        handleRemoveFile(idx)
+                                    }}
+                                    aria-label={`Удалить файл ${file.name}`}
                                 >
-                                    <svg
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2.5"
-                                    >
-                                        <line
-                                            x1="18"
-                                            y1="6"
-                                            x2="6"
-                                            y2="18"
-                                        ></line>
-                                        <line
-                                            x1="6"
-                                            y1="6"
-                                            x2="18"
-                                            y2="18"
-                                        ></line>
-                                    </svg>
+                                    ✕
                                 </button>
                             </div>
                         ))}
