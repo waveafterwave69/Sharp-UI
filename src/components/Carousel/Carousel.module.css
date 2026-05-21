@@ -79,6 +79,10 @@
     z-index: 2;
 }
 
+.icon:disabled {
+    cursor: not-allowed;
+}
+
 .icon__border__none {
     border-radius: 0;
 }

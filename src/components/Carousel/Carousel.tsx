@@ -37,7 +37,7 @@ const Carousel: FC<CarouselProps> = ({
         setActiveMedia((prev) => {
             const next = prev + 1;
 
-            if(next >= media.length) return media.length;
+            if(next >= media.length - 1) return media.length - 1;
 
             return next;
         });
@@ -71,7 +71,7 @@ const Carousel: FC<CarouselProps> = ({
                     ]
                 )}
                 aria-label="Previous slide"
-
+                disabled={activeMedia === 0}
             >
                 <Arrow />
             </button>
@@ -112,6 +112,7 @@ const Carousel: FC<CarouselProps> = ({
                     ]
                 )}
                 aria-label="Next slide"
+                disabled={activeMedia === media.length - 1}
             >
                 <Arrow />
             </button>
